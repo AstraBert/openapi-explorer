@@ -59,7 +59,7 @@ func OpenAPISpecToString(file []byte, version OpenAPIVersion) (string, error) {
 		return "", err
 	}
 
-	if version == OpenAPIV2 {
+	if version == OpenAPIV3 {
 		v3Model, err := document.BuildV3Model()
 		if err != nil {
 			return "", nil

@@ -1,0 +1,33 @@
+package templates
+
+templ GeneratedCode(code string, dependencies []string) {
+    <div class="flex flex-col justify-center items-center gap-y-6 p-4" x-data>
+        <h3 class="font-semibold text-gray-500">Generated Python Code</h3>
+        <div class="mockup-code w-full">
+            <pre><code class="language-python" x-ref="code">{code}</code></pre>
+        </div>
+        <h3 class="font-semibold text-gray-500">Necessary Dependencies</h3>
+        <div class="mockup-code w-full">
+            for _, dep := range dependencies {
+                <pre><code>{dep}</code></pre>
+            } 
+        </div>
+        <div>
+            <button
+                class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-md"
+                x-ref="copyButton"
+                @click="navigator.clipboard.writeText($refs.code.textContent); $refs.copyButton.textContent = 'Copied!'; setTimeout(() => {$refs.copyButton.textContent = 'Copy Code'}, 1000);"
+                type="button"
+            >
+            Copy Code
+            </button>
+            <button
+                @click="document.getElementById('generatedCode').innerHTML = '';"
+                type="button"
+                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+            Clear
+            </button>
+        </div>
+    </div>
+}

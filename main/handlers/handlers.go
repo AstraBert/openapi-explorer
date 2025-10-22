@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"openapi-explorer/ai"
 	"openapi-explorer/models"
 	"openapi-explorer/openapi"
+	"openapi-explorer/templates"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -23,37 +25,46 @@ func HandleCodeGeneration(c *fiber.Ctx) error {
 	v := c.FormValue("openapiVersion")
 	msg := c.FormValue("inputMessage")
 	typedV, ok := validateOpenAPIVersion(v)
+	c.Set("Content-Type", "text/html")
 	if !ok {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "invalid OpenAPI version provided (should be 2 or 3)"})
+		return templates.ErrorBanner(errors.New("invalid OpenAPI version provided (should be 2 or 3)")).Render(c.Context(), c.Response().BodyWriter())
 	}
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "error while parsing the input file: " + err.Error()})
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
 	}
 	src, err := fl.Open()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "error while opening the input file: " + err.Error()})
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
 	}
 	bts, err := io.ReadAll(src)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "error while reading the input file: " + err.Error()})
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
 	}
 	openApiSchema, err := openapi.OpenAPISpecToString(bts, *typedV)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "error while converting the JSON schema to human-readable format: " + err.Error()})
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
 	}
-	response := ai.StructuredChat[models.ApiRequestPythonCode](
+	response, err := ai.StructuredChat[models.ApiRequestPythonCode](
 		fmt.Sprintf("Based on this OpenAPI schema (version %s):\n\n```text\n%s\n```\n\n, create a python code (and list the needed dependencies) using `requests` and all other needed packages to send an API request to the API server based on this user request: %s", v, openApiSchema, msg),
 		"You are a senior python engineer with great expertise in API requests using the `requests` package. You produce code along with the needed dependencies to run it. Be accurate, but not too verbose in the produced code.",
 		"ApiRequestPythonCode",
 		"Python code to send an API request to an API server, as well as the needed dependencies to run the code",
 	)
+	if err != nil {
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
+	}
 	typedResponse, ok := response.(models.ApiRequestPythonCode)
 	if !ok {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "error while generating the code for the API request"})
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
 	}
 	deps := make([]string, len(typedResponse.Dependencies))
 	for _, dep := range typedResponse.Dependencies {
 		deps = append(deps, dep.Name+dep.VersionConstraint)
 	}
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"code": typedResponse.Code, "dependencies": deps})
+	return templates.GeneratedCode(typedResponse.Code, deps).Render(c.Context(), c.Response().BodyWriter())
+}
+
+func HomeRoute(c *fiber.Ctx) error {
+	c.Set("Content-Type", "text/html")
+	return templates.Home().Render(c.Context(), c.Response().BodyWriter())
 }

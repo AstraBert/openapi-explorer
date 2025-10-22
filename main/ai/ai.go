@@ -3,7 +3,6 @@ package ai
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/invopop/jsonschema"
 	"github.com/openai/openai-go/v2"
@@ -19,7 +18,7 @@ func generateSchema[T any]() any {
 	return schema
 }
 
-func StructuredChat[T any](message, systemMessage, schemaName, schemaDescription string) any {
+func StructuredChat[T any](message, systemMessage, schemaName, schemaDescription string) (any, error) {
 
 	client := openai.NewClient()
 	ctx := context.Background()
@@ -47,11 +46,11 @@ func StructuredChat[T any](message, systemMessage, schemaName, schemaDescription
 	})
 
 	if err != nil {
-		fmt.Println("Error in API call:", err)
+		return nil, err
 	}
 
 	// extract into a well-typed struct
 	var structuredOutput T
 	_ = json.Unmarshal([]byte(chat.Choices[0].Message.Content), &structuredOutput)
-	return structuredOutput
+	return structuredOutput, nil
 }
