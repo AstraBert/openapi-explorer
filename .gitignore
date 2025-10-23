@@ -3,3 +3,10 @@ opencode-openapi.json
 
 # env vars
 .env
+
+# python virtual environment and caches
+.venv
+__pycache__/
+
+# caches
+*_cache/
