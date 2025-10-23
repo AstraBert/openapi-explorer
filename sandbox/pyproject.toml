@@ -12,6 +12,7 @@ dependencies = [
     "fastapi>=0.119.1",
     "fastapi-limiter>=0.1.6",
     "open-sandboxes>=0.1.0a0",
+    "orjson>=3.11.3",
     "uvicorn>=0.38.0",
 ]
 

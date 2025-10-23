@@ -9,6 +9,7 @@ sandbox_user = os.getenv("SANDBOX_USER", "")
 sandbox_password = os.getenv("SANDBOX_PASSPHRASE", "")
 sandbox_ssh_port = int(os.getenv("SANDBOX_SSH_PORT", "22"))
 sandbox_host = os.getenv("SANDBOX_HOST", "")
+sandbox_key_file = os.getenv("SANDBOX_KEY_FILE", "")
 
 def dependencies_to_pyproject_config(dependencies: list[Dependency]) -> PyprojectConfig:
     deps: list[PyprojectDependency] = []
@@ -25,6 +26,7 @@ def setup_sandbox(dependencies: list[Dependency]) -> Sandbox:
         name="sandbox-" + token_urlsafe(16),
         port=sandbox_ssh_port,
         username=sandbox_user,
-        password=sandbox_password,
+        passphrase=sandbox_password,
+        key_file=sandbox_key_file,
         config=config
     )
