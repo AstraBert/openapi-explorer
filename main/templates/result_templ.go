@@ -8,6 +8,8 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "strings"
+
 func GeneratedCode(code string, dependencies []string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -29,43 +31,69 @@ func GeneratedCode(code string, dependencies []string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col justify-center items-center gap-y-6 p-4\" x-data><h3 class=\"font-semibold text-gray-500\">Generated Python Code</h3><div class=\"mockup-code w-full\"><pre><code class=\"language-python\" x-ref=\"code\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form hx-post=\"/code/run\" hx-target=\"#codeResult\" hx-trigger=\"submit\"><div class=\"flex flex-col justify-center items-center gap-y-6 p-4\" x-data><h3 class=\"font-semibold text-gray-500\">Generated Python Code</h3><div class=\"mockup-code w-full\"><pre><code class=\"language-python\" x-ref=\"code\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(code)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/result.templ`, Line: 7, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/result.templ`, Line: 10, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</code></pre></div><h3 class=\"font-semibold text-gray-500\">Necessary Dependencies</h3><div class=\"mockup-code w-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</code></pre><input hidden value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(code)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/result.templ`, Line: 11, Col: 41}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" name=\"codeToRun\" id=\"codeToRun\" readonly></div><h3 class=\"font-semibold text-gray-500\">Necessary Dependencies</h3><div class=\"mockup-code w-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, dep := range dependencies {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<pre><code>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<pre><code>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var3 string
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(dep)
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(dep)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/result.templ`, Line: 12, Col: 31}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/result.templ`, Line: 16, Col: 35}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</code></pre>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</code></pre>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div><div><button class=\"px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-md\" x-ref=\"copyButton\" @click=\"navigator.clipboard.writeText($refs.code.textContent); $refs.copyButton.textContent = 'Copied!'; setTimeout(() => {$refs.copyButton.textContent = 'Copy Code'}, 1000);\" type=\"button\">Copy Code</button> <button @click=\"document.getElementById('generatedCode').innerHTML = '';\" type=\"button\" class=\"px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600\">Clear</button></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<input hidden value=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strings.Join(dependencies, "\n"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/result.templ`, Line: 18, Col: 69}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" name=\"dependencies\" id=\"dependencies\" readonly></div><div><button class=\"px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-md\" x-ref=\"copyButton\" @click=\"navigator.clipboard.writeText($refs.code.textContent); $refs.copyButton.textContent = 'Copied!'; setTimeout(() => {$refs.copyButton.textContent = 'Copy Code'}, 1000);\" type=\"button\">Copy Code</button> <button @click=\"document.getElementById('generatedCode').innerHTML = '';\" type=\"button\" class=\"px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600\">Clear</button> <button hx-indicator=\"#runIndicator\" type=\"submit\" class=\"px-4 py-2 bg-green-400 text-black rounded hover:bg-green-600 hover:text-white\">Run Code</button></div><br><br><div id=\"runIndicator\" class=\"htmx-indicator flex justify-center items-center\"><span class=\"loading loading-spinner loading-lg\"></span></div></div></form><div id=\"codeResult\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

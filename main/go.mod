@@ -5,14 +5,15 @@ go 1.24.7
 toolchain go1.24.9
 
 require (
+	github.com/a-h/templ v0.3.960
 	github.com/gofiber/fiber/v2 v2.52.9
+	github.com/gofiber/storage/sqlite3 v1.3.8
 	github.com/invopop/jsonschema v0.13.0
 	github.com/openai/openai-go/v2 v2.7.1
 	github.com/pb33f/libopenapi v0.28.0
 )
 
 require (
-	github.com/a-h/templ v0.3.960 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
@@ -22,13 +23,16 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
+	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/pb33f/jsonpath v0.1.2 // indirect
 	github.com/pb33f/ordered-map/v2 v2.3.0 // indirect
+	github.com/philhofer/fwd v1.1.3-0.20240916144458-20a13a1f6b7c // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
+	github.com/tinylib/msgp v1.2.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect

@@ -23,7 +23,7 @@ templ Home() {
         @NavBar()
         <h1 class="text-xl font-bold text-gray-700">AI-Powered code generation for API requests</h1>
         <h2 class="text-lg font-semibold text-gray-500">No more getting lost in endless unformatted OpenAPI JSON specs: paste them here, ask to build a request, run the code, get the result.</h2>
-        <form hx-post="/code" hx-target="#generatedCode" hx-trigger="submit" hx-encoding="multipart/form-data" enctype="multipart/form-data">
+        <form hx-post="/code/generate" hx-target="#generatedCode" hx-trigger="submit" hx-encoding="multipart/form-data" enctype="multipart/form-data">
             <fieldset class="fieldset bg-base-100 border-base-300 rounded-box w-200 border p-4">
                 <legend class="fieldset-legend text-lg">Upload a JSON file with OpenAPI specs here</legend>
                 <label class="label flex justify-center">
