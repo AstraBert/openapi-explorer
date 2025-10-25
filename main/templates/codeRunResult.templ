@@ -4,7 +4,7 @@ templ CodeRunResult(output, err string) {
     <div class="flex flex-col justify-center items-center gap-y-6 p-4" x-data>
         <h3 class="font-semibold text-gray-500">Result - Captured StdOut Logs</h3>
         <div class="mockup-code w-full">
-            <pre><code x-ref="language-plaintext">{output}</code></pre>
+            <pre><code class="language-plaintext" x-ref="codeRunOutput">{output}</code></pre>
         </div>
         <h3 class="font-semibold text-gray-500">Result - Captured StdErr Logs</h3>
         <div class="mockup-code w-full">
