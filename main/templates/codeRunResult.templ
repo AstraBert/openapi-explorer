@@ -1,0 +1,31 @@
+package templates
+
+templ CodeRunResult(output, err string) {
+    <div class="flex flex-col justify-center items-center gap-y-6 p-4" x-data>
+        <h3 class="font-semibold text-gray-500">Result - Captured StdOut Logs</h3>
+        <div class="mockup-code w-full">
+            <pre><code x-ref="language-plaintext">{output}</code></pre>
+        </div>
+        <h3 class="font-semibold text-gray-500">Result - Captured StdErr Logs</h3>
+        <div class="mockup-code w-full">
+            <pre><code class="language-plaintext">{err}</code></pre>
+        </div>
+        <div class="flex gap-x-4 justify-center items-center">
+            <button
+                class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium shadow-md"
+                x-ref="copyButton"
+                @click="navigator.clipboard.writeText($refs.codeRunOutput.textContent); $refs.copyButton.textContent = 'Copied!'; setTimeout(() => {$refs.copyButton.textContent = 'Copy Result'}, 1000);"
+                type="button"
+            >
+            Copy Result
+            </button>
+            <button
+                @click="document.getElementById('codeResult').innerHTML = '';"
+                type="button"
+                class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+            Clear
+            </button>
+        </div>
+    </div>
+}

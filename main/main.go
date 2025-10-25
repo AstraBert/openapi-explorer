@@ -21,6 +21,7 @@ func main() {
 
 func Setup() *fiber.App {
 	app := fiber.New()
+
 	corsConfig := cors.Config{
 		AllowOrigins: "https://openapi.clelias-dockploy.my.id",
 		AllowMethods: "POST",
@@ -42,6 +43,7 @@ func Setup() *fiber.App {
 	}
 	app.Get("/", handlers.HomeRoute)
 	app.Post("/code/generate", cors.New(corsConfig), limiter.New(limiterConfig), handlers.HandleCodeGeneration)
+	app.Post("/code/run", cors.New(corsConfig), limiter.New(limiterConfig), handlers.HandleCodeRun)
 
 	return app
 }

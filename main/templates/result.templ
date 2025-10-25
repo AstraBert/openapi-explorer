@@ -8,14 +8,14 @@ templ GeneratedCode(code string, dependencies []string) {
             <h3 class="font-semibold text-gray-500">Generated Python Code</h3>
             <div class="mockup-code w-full">
                 <pre><code class="language-python" x-ref="code">{code}</code></pre>
-                <input hidden value={code} name="codeToRun" id="codeToRun" readonly />
+                <textarea hidden name="codeToRun" id="codeToRun" readonly>{code}</textarea>
             </div>
             <h3 class="font-semibold text-gray-500">Necessary Dependencies</h3>
             <div class="mockup-code w-full">
                 for _, dep := range dependencies {
                     <pre><code>{dep}</code></pre>
                 }
-                <input hidden value={strings.Join(dependencies, "\n")} name="dependencies" id="dependencies" readonly />
+                <textarea hidden name="dependencies" id="dependencies" readonly>{strings.Join(dependencies, "\n")}</textarea>
             </div>
             <div>
                 <button
@@ -41,8 +41,6 @@ templ GeneratedCode(code string, dependencies []string) {
                 Run Code
                 </button>
             </div>
-            <br>
-            <br>
             <div id="runIndicator" class="htmx-indicator flex justify-center items-center">
                 <span class="loading loading-spinner loading-lg"></span>
             </div>

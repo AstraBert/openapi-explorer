@@ -1,13 +1,18 @@
 package handlers
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"openapi-explorer/ai"
 	"openapi-explorer/models"
 	"openapi-explorer/openapi"
 	"openapi-explorer/templates"
+	"os"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -67,4 +72,77 @@ func HandleCodeGeneration(c *fiber.Ctx) error {
 func HomeRoute(c *fiber.Ctx) error {
 	c.Set("Content-Type", "text/html")
 	return templates.Home().Render(c.Context(), c.Response().BodyWriter())
+}
+
+func parsePythonDependency(dep string) (name string, constraints string) {
+	dep = strings.TrimSpace(dep)
+
+	// Find first occurrence of version constraint characters
+	for i, ch := range dep {
+		if ch == '=' || ch == '<' || ch == '>' || ch == '!' || ch == '~' {
+			return strings.TrimSpace(dep[:i]), strings.TrimSpace(dep[i:])
+		}
+	}
+
+	// No version constraint found
+	return dep, ""
+}
+
+func HandleCodeRun(c *fiber.Ctx) error {
+	code := c.FormValue("codeToRun")
+	deps := c.FormValue("dependencies")
+	dependencies := strings.Split(deps, "\n")
+	depsToSubmit := make([]models.Dependency, len(dependencies))
+	for i, dep := range dependencies {
+		name, vers := parsePythonDependency(dep)
+		depsToSubmit[i] = models.Dependency{Name: name, VersionConstraint: vers}
+	}
+	requestBodyRaw := models.ApiRequestPythonCode{Code: code, Dependencies: depsToSubmit}
+	apiKey := os.Getenv("SANDBOX_API_KEY")
+	apiEndpoint := os.Getenv("SANDBOX_API_ENDPOINT")
+	jsonData, err := json.Marshal(requestBodyRaw)
+
+	c.Set("Content-Type", "text/html")
+	if err != nil {
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
+	}
+
+	// Create the HTTP request
+	req, err := http.NewRequest("POST", apiEndpoint, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
+	}
+
+	// Set headers
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("x-api-key", apiKey)
+
+	// Send the request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
+	}
+	defer resp.Body.Close()
+
+	// Read the response
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
+	}
+
+	// Check status code
+	if resp.StatusCode != http.StatusOK {
+		return templates.ErrorBanner(fmt.Errorf("response has status %d: %s", resp.StatusCode, string(body))).Render(c.Context(), c.Response().BodyWriter())
+	}
+
+	var response models.ApiResponseCodeRun
+
+	err = json.Unmarshal(body, &response)
+
+	if err != nil {
+		return templates.ErrorBanner(err).Render(c.Context(), c.Response().BodyWriter())
+	}
+
+	return templates.CodeRunResult(response.Output, response.Error).Render(c.Context(), c.Response().BodyWriter())
 }

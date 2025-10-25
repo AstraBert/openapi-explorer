@@ -1,5 +1,6 @@
 # openapi specs test
 opencode-openapi.json
+openapi.json
 
 # env vars
 .env

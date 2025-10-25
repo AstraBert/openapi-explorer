@@ -50,6 +50,7 @@ templ Home() {
                 type="submit"
                 class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                 hx-indicator="#loadingIndicator"
+                id="generateCodeButton"
                 >Generate Code</button>
             </div>
             <br>
@@ -64,10 +65,16 @@ templ Home() {
     <script>
     hljs.highlightAll();
     document.body.addEventListener('htmx:afterSwap', function(evt) {
-        if (evt.detail.target.id === 'generatedCode') {
+        if (evt.detail.target.id === 'generatedCode' || evt.detail.target.id === 'codeResult') {
             evt.detail.target.querySelectorAll('pre code').forEach((block) => {
                 hljs.highlightElement(block);
             });
+        }
+    });
+    document.getElementById("generateCodeButton").addEventListener('click', function() {
+        const generatedCode = document.getElementById('generatedCode');
+        if (generatedCode && generatedCode.innerHTML.trim() !== '') {
+            generatedCode.innerHTML = '';
         }
     });
     </script>
