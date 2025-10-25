@@ -17,7 +17,7 @@ async def run_code_in_sandbox(input: CodeInput, x_api_key: str = Depends(check_a
     dependencies = input.dependencies
     s = setup_sandbox(dependencies=dependencies)
     try:
-        result = s.run_code(code=code_to_run)
+        result = s.run_code(code=code_to_run, cpus=0.1, memory=200, processes=10, read_rate="1mb", write_rate="2mb")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error while provisioning the sandbox and running the code: {e}")
     else:
